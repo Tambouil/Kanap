@@ -6,6 +6,7 @@ const getDatas = async () => {
 };
 getDatas();
 
+// Display all products
 const printProducts = (data) => {
   data.forEach((product) => {
     console.log(product);
@@ -13,36 +14,29 @@ const printProducts = (data) => {
     const { _id, name, description, imageUrl, altTxt } = product;
 
     const productLink = creatLink(_id);
-    const productArticle = createArticle();
+    const productArticle = document.createElement("article");
     const productImg = createImg(imageUrl, altTxt);
     const productTitle = createTitle(name);
     const productDescription = createDescription(description);
 
-    productArticle.appendChild(productImg);
-    productArticle.appendChild(productTitle);
-    productArticle.appendChild(productDescription);
-
-    appendChilden(productLink, productArticle);
+    appendLink(productLink, productArticle);
+    appendElements(
+      productArticle,
+      productImg,
+      productTitle,
+      productDescription
+    );
   });
 };
 
+// Create ID Link element
 const creatLink = (id) => {
   const link = document.createElement("a");
   link.href = "./product.html?id=" + id;
   return link;
 };
 
-const appendChilden = (productLink, productArticle) => {
-  const items = document.getElementById("items");
-  items.appendChild(productLink);
-  productLink.appendChild(productArticle);
-};
-
-const createArticle = () => {
-  const article = document.createElement("article");
-  return article;
-};
-
+// Create product's image element
 const createImg = (imageUrl, altTxt) => {
   const image = document.createElement("img");
   image.src = imageUrl;
@@ -50,14 +44,33 @@ const createImg = (imageUrl, altTxt) => {
   return image;
 };
 
+// Create product's title element
 const createTitle = (name) => {
   const title = document.createElement("h3");
   title.textContent = name;
   return title;
 };
 
+// Create product's description element
 const createDescription = (description) => {
   const desc = document.createElement("p");
   desc.textContent = description;
   return desc;
+};
+
+// Append Link & Article to Items
+const appendLink = (productLink, productArticle) => {
+  const items = document.getElementById("items");
+  items.appendChild(productLink);
+  productLink.appendChild(productArticle);
+};
+
+// Append Image, title and description to each article
+const appendElements = (
+  productArticle,
+  productImg,
+  productTitle,
+  productDescription
+) => {
+  productArticle.append(productImg, productTitle, productDescription);
 };
