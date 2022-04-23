@@ -3,6 +3,8 @@ const queryUrl = window.location.search;
 const params = new URLSearchParams(queryUrl);
 const productId = params.get("id");
 
+let priceStorage = 0;
+
 // Get Datas from API
 const getDatas = async () => {
   const response = await fetch(
@@ -16,6 +18,8 @@ getDatas();
 // Display attributes for each product
 const displayProducts = (product) => {
   const { name, description, imageUrl, altTxt, colors, price } = product;
+
+  priceStorage = price;
 
   createImg(imageUrl, altTxt);
   createTitle(name);
@@ -62,4 +66,33 @@ const createColorsList = (colors) => {
     colorOptions.textContent = color;
     colorsList.appendChild(colorOptions);
   });
+};
+
+// Get values from user choice on click
+const cartButton = document.getElementById("addToCart");
+cartButton.addEventListener("click", handleClick);
+
+const handleClick = () => {
+  const colorValue = document.getElementById("colors").value;
+  const quantityValue = document.getElementById("quantity").value;
+
+  if (colorValue === "" || quantityValue == 0) {
+    alert("veuillez sélectionner une couleur et une quantité");
+  } else {
+    // const dataStorage = [productId, colorValue, quantityValue, priceStorage];
+    // localStorage.setItem(productId, [dataStorage]);
+    addToCart(colorValue, quantityValue);
+    window.location.href = "./cart.html";
+  }
+};
+
+// Add selected data to local storage
+const addToCart = (colorValue, quantityValue) => {
+  const storeData = {
+    id: productId,
+    price: priceStorage,
+    color: colorValue,
+    quantity: quantityValue,
+  };
+  localStorage.setItem(productId, JSON.stringify(storeData));
 };
