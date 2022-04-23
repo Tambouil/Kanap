@@ -7,10 +7,8 @@ const getDatas = async () => {
 getDatas();
 
 // Display all products
-const printProducts = (data) => {
-  data.forEach((product) => {
-    console.log(product);
-
+const printProducts = (products) => {
+  products.forEach((product) => {
     const { _id, name, description, imageUrl, altTxt } = product;
 
     const productLink = creatLink(_id);
@@ -20,7 +18,7 @@ const printProducts = (data) => {
     const productDescription = createDescription(description);
 
     appendLink(productLink, productArticle);
-    appendElements(
+    appendProductAttributes(
       productArticle,
       productImg,
       productTitle,
@@ -37,10 +35,10 @@ const creatLink = (id) => {
 };
 
 // Create product's image element
-const createImg = (imageUrl, altTxt) => {
+const createImg = (url, alt) => {
   const image = document.createElement("img");
-  image.src = imageUrl;
-  image.alt = altTxt;
+  image.src = url;
+  image.alt = alt;
   return image;
 };
 
@@ -66,7 +64,7 @@ const appendLink = (productLink, productArticle) => {
 };
 
 // Append Image, title and description to each article
-const appendElements = (
+const appendProductAttributes = (
   productArticle,
   productImg,
   productTitle,
