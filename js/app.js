@@ -1,4 +1,4 @@
-// Get Data from API
+// Get Datas from API
 const getDatas = async () => {
   const response = await fetch("http://localhost:3000/api/products");
   const data = await response.json();
@@ -30,7 +30,7 @@ const printProducts = (products) => {
 // Create ID Link element
 const creatLink = (id) => {
   const link = document.createElement("a");
-  link.href = "./product.html?id=" + id;
+  link.href = `./product.html?id=${id}`;
   return link;
 };
 
