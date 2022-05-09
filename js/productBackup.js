@@ -1,11 +1,9 @@
-// Get id from url for each product
+// Get id url params for each product
 const queryUrl = window.location.search;
 const params = new URLSearchParams(queryUrl);
 const productId = params.get("id");
 
-let storedPrice = 0;
-let storedImg = "";
-let storedAltTxt = "";
+let priceStorage = 0;
 
 // Get Datas from API
 const getDatas = async () => {
@@ -23,39 +21,53 @@ const getDatas = async () => {
 };
 
 getDatas()
-  .then((data) => console.log("resolved:", data))
-  .catch((err) => console.log("rejected:", err.message));
+  .then((data) => console.log("resolved", data))
+  .catch((err) => console.log("rejected", err.message));
 
 // Display attributes for each product
 const displayProducts = (product) => {
   const { name, description, imageUrl, altTxt, colors, price } = product;
 
-  storedPrice = price;
-  storedImg = imageUrl;
-  storedAltTxt = altTxt;
+  priceStorage = price;
 
-  // Create product's image element
+  createImg(imageUrl, altTxt);
+  createTitle(name);
+  createPrice(price);
+  createDescription(description);
+  createColorsList(colors);
+};
+
+// Create product's image element
+const createImg = (url, alt) => {
   const img = document.createElement("img");
-  img.src = imageUrl;
-  img.alt = altTxt;
+  img.src = url;
+  img.alt = alt;
   const productImg = document.querySelector(".item__img");
   productImg.appendChild(img);
+};
 
-  // Create product's title element
+// Create product's title element
+const createTitle = (name) => {
   const pageTitle = document.getElementById("productTitle");
   const title = document.getElementById("title");
   pageTitle.textContent = name;
   title.textContent = name;
+};
 
-  // Create product's price element
+// Create product's price element
+const createPrice = (price) => {
   const productPrice = document.getElementById("price");
   productPrice.textContent = price;
+};
 
-  // Create product's description element
+// Create product's description element
+const createDescription = (description) => {
   const productDescription = document.getElementById("description");
   productDescription.textContent = description;
+};
 
-  // Create product's colors list
+// Create product's colors list
+const createColorsList = (colors) => {
   const colorsList = document.getElementById("colors");
   colors.forEach((color) => {
     const colorOptions = document.createElement("option");
@@ -74,9 +86,6 @@ const handleClick = () => {
     alert("veuillez sélectionner une couleur et une quantité");
   } else {
     addToCart(colorValue, quantityValue);
-    window.confirm(
-      `Votre commande a bien été ajoutée au panier. Pour consulter votre panier, cliquez sur OK`
-    );
     window.location.href = "./cart.html";
   }
 };
@@ -85,13 +94,11 @@ cartButton.addEventListener("click", handleClick);
 
 // Add selected data to local storage
 const addToCart = (colorValue, quantityValue) => {
-  const storedData = {
+  const storeData = {
     id: productId,
-    price: storedPrice,
+    price: priceStorage,
     color: colorValue,
     quantity: quantityValue,
-    image: storedImg,
-    alt: storedAltTxt,
   };
-  localStorage.setItem(productId, JSON.stringify(storedData));
+  localStorage.setItem(productId, JSON.stringify(storeData));
 };
