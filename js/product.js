@@ -1,11 +1,12 @@
+let storedName = "";
+let storedPrice = 0;
+let storedImg = "";
+let storedAltTxt = "";
+
 // Get id from url for each product
 const queryUrl = window.location.search;
 const params = new URLSearchParams(queryUrl);
 const productId = params.get("id");
-
-let storedPrice = 0;
-let storedImg = "";
-let storedAltTxt = "";
 
 // Get Datas from API
 const getDatas = async () => {
@@ -19,17 +20,18 @@ const getDatas = async () => {
 
   const data = await response.json();
   displayProducts(data);
-  return data;
 };
 
-getDatas()
-  .then((data) => console.log("resolved:", data))
-  .catch((err) => console.log("rejected:", err.message));
+getDatas().catch((err) => {
+  const serverError = document.createElement("p");
+  serverError.textContent = err.message;
+  document.querySelector(".item").appendChild(serverError);
+});
 
 // Display attributes for each product
 const displayProducts = (product) => {
   const { name, description, imageUrl, altTxt, colors, price } = product;
-
+  storedName = name;
   storedPrice = price;
   storedImg = imageUrl;
   storedAltTxt = altTxt;
@@ -87,6 +89,7 @@ cartButton.addEventListener("click", handleClick);
 const addToCart = (colorValue, quantityValue) => {
   const storedData = {
     id: productId,
+    name: storedName,
     price: storedPrice,
     color: colorValue,
     quantity: quantityValue,
