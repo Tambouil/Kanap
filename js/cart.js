@@ -18,40 +18,44 @@ const displayOrders = () => {
     emptyCart.textContent = "Votre panier est vide :(";
   } else {
     cart.forEach((item) => {
+      const { id, name, price, color, quantity, image, alt } = item;
+
       const article = document.createElement("article");
       document.getElementById("cart__items").appendChild(article);
       article.classList.add("cart__item");
-      article.dataset.id = item.id;
-      article.dataset.color = item.color;
+      article.dataset.id = id;
+      article.dataset.color = color;
 
+      // Attributes section
       const imgContainer = document.createElement("div");
       article.appendChild(imgContainer);
       imgContainer.classList.add("cart__item__img");
 
-      const img = document.createElement("img");
-      imgContainer.appendChild(img);
-      img.src = item.image;
-      img.alt = item.alt;
+      const itemImg = document.createElement("img");
+      imgContainer.appendChild(itemImg);
+      itemImg.src = image;
+      itemImg.alt = alt;
 
       const contentContainer = document.createElement("div");
       article.appendChild(contentContainer);
       contentContainer.classList.add("cart__item__content");
 
-      const description = document.createElement("div");
-      contentContainer.appendChild(description);
-      description.classList.add("cart__item__content__description");
+      const descriptionItem = document.createElement("div");
+      contentContainer.appendChild(descriptionItem);
+      descriptionItem.classList.add("cart__item__content__description");
 
-      const title = document.createElement("h2");
-      title.textContent = item.name;
+      const titleItem = document.createElement("h2");
+      titleItem.textContent = name;
 
-      const color = document.createElement("p");
-      color.textContent = item.color;
+      const colorItem = document.createElement("p");
+      colorItem.textContent = color;
 
-      const price = document.createElement("p");
-      price.textContent = item.price + " €";
+      const priceItem = document.createElement("p");
+      priceItem.textContent = price + " €";
 
-      description.append(title, color, price);
+      descriptionItem.append(titleItem, colorItem, priceItem);
 
+      // Settings section
       const settings = document.createElement("div");
       contentContainer.appendChild(settings);
       settings.classList.add("cart__item__content__settings");
@@ -61,8 +65,8 @@ const displayOrders = () => {
         "cart__item__content__settings__quantity"
       );
 
-      const quantity = document.createElement("p");
-      quantity.textContent = "Qté : ";
+      const quantityTitle = document.createElement("p");
+      quantityTitle.textContent = "Qté : ";
 
       const quantityInput = document.createElement("input");
       quantityInput.type = "number";
@@ -70,13 +74,13 @@ const displayOrders = () => {
       quantityInput.name = "itemQuantity";
       quantityInput.min = "1";
       quantityInput.max = "100";
-      quantityInput.value = item.quantity;
+      quantityInput.value = quantity;
 
       const deleteContainer = document.createElement("div");
       deleteContainer.classList.add("cart__item__content__settings__delete");
 
       settings.append(quantityContainer, deleteContainer);
-      quantityContainer.append(quantity, quantityInput);
+      quantityContainer.append(quantityTitle, quantityInput);
 
       const deleteItem = document.createElement("p");
       deleteContainer.appendChild(deleteItem);
@@ -86,3 +90,37 @@ const displayOrders = () => {
   }
 };
 displayOrders();
+
+const getTotalQuantity = () => {
+  const totalQuantity = document.getElementById("totalQuantity");
+  const total = cart.reduce((total, item) => total + item.quantity, 0);
+  totalQuantity.textContent = total;
+};
+getTotalQuantity();
+
+function updateOrdersTest() {
+  const test = document.querySelectorAll(".itemQuantity");
+  // console.log(test);
+  test.forEach((ttt) => {
+    // console.log(ttt);
+    ttt.addEventListener("change", (e) => {
+      let idUpdate = e.target.closest(".cart__item").dataset.id;
+      const itemUpdate = cart.find((el) => el.id === idUpdate);
+
+      itemUpdate.quantity = ttt.value;
+
+      console.log(itemUpdate);
+    });
+  });
+}
+updateOrdersTest();
+
+const getTotalPrice = () => {
+  const totalPrice = document.getElementById("totalPrice");
+  const total = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  totalPrice.textContent = total;
+};
+getTotalPrice();

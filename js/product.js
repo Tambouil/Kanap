@@ -92,7 +92,7 @@ const addToCart = (colorValue, quantityValue) => {
     name: storedName,
     price: storedPrice,
     color: colorValue,
-    quantity: quantityValue,
+    quantity: Number(quantityValue),
     image: storedImg,
     alt: storedAltTxt,
   };
