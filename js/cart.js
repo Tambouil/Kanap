@@ -98,23 +98,6 @@ const getTotalQuantity = () => {
 };
 getTotalQuantity();
 
-function updateOrdersTest() {
-  const test = document.querySelectorAll(".itemQuantity");
-  // console.log(test);
-  test.forEach((ttt) => {
-    // console.log(ttt);
-    ttt.addEventListener("change", (e) => {
-      let idUpdate = e.target.closest(".cart__item").dataset.id;
-      const itemUpdate = cart.find((el) => el.id === idUpdate);
-
-      itemUpdate.quantity = ttt.value;
-
-      console.log(itemUpdate);
-    });
-  });
-}
-updateOrdersTest();
-
 const getTotalPrice = () => {
   const totalPrice = document.getElementById("totalPrice");
   const total = cart.reduce(
@@ -124,3 +107,26 @@ const getTotalPrice = () => {
   totalPrice.textContent = total;
 };
 getTotalPrice();
+
+function updateOrders() {
+  const updateInputs = document.querySelectorAll(".itemQuantity");
+  // console.log( updateInputs);
+  updateInputs.forEach((updateInput) => {
+    // console.log(updateInput);
+    updateInput.addEventListener("change", (e) => {
+      let idUpdate = e.target.closest(".cart__item").dataset.id;
+      let colorUpdate = e.target.closest(".cart__item").dataset.color;
+      const itemUpdate = cart.find(
+        (el) => (el.id === idUpdate) & (el.color === colorUpdate)
+      );
+
+      itemUpdate.quantity = Number(updateInput.value);
+
+      console.log(itemUpdate);
+
+      getTotalQuantity();
+      getTotalPrice();
+    });
+  });
+}
+updateOrders();
