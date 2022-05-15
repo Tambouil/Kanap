@@ -88,6 +88,7 @@ const displayOrders = () => {
       deleteItem.textContent = "Supprimer";
     });
   }
+  deleteOrder();
 };
 displayOrders();
 
@@ -108,7 +109,7 @@ const getTotalPrice = () => {
 };
 getTotalPrice();
 
-function updateOrders() {
+const updateOrders = () => {
   const updateInputs = document.querySelectorAll(".itemQuantity");
   updateInputs.forEach((updateInput) => {
     updateInput.addEventListener("change", (e) => {
@@ -128,7 +129,7 @@ function updateOrders() {
       getTotalPrice();
     });
   });
-}
+};
 updateOrders();
 
 function deleteOrder() {
@@ -137,15 +138,14 @@ function deleteOrder() {
     deleteInput.addEventListener("click", (e) => {
       const idDelete = e.target.closest(".cart__item").dataset.id;
       const colorDelete = e.target.closest(".cart__item").dataset.color;
-      const itemDelete = cart.find(
-        (el) => (el.id === idDelete) & (el.color === colorDelete)
-      );
-      console.log(itemDelete);
       keyDelete = idDelete + colorDelete;
       localStorage.removeItem(keyDelete);
       alert("Ce produit a bien été supprimé du panier");
-      location.reload();
+
+      const itemToDelete = document.querySelector(
+        `article[data-id="${idDelete}"][data-color="${colorDelete}"]`
+      );
+      itemToDelete.remove();
     });
   });
 }
-deleteOrder();
