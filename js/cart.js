@@ -110,19 +110,19 @@ getTotalPrice();
 
 function updateOrders() {
   const updateInputs = document.querySelectorAll(".itemQuantity");
-  // console.log( updateInputs);
   updateInputs.forEach((updateInput) => {
-    // console.log(updateInput);
     updateInput.addEventListener("change", (e) => {
-      let idUpdate = e.target.closest(".cart__item").dataset.id;
-      let colorUpdate = e.target.closest(".cart__item").dataset.color;
+      const idUpdate = e.target.closest(".cart__item").dataset.id;
+      const colorUpdate = e.target.closest(".cart__item").dataset.color;
       const itemUpdate = cart.find(
         (el) => (el.id === idUpdate) & (el.color === colorUpdate)
       );
 
+      keyUpdate = idUpdate + colorUpdate;
       itemUpdate.quantity = Number(updateInput.value);
 
-      console.log(itemUpdate);
+      const orderUpdated = JSON.stringify(itemUpdate);
+      localStorage.setItem(keyUpdate, orderUpdated);
 
       getTotalQuantity();
       getTotalPrice();
@@ -130,3 +130,22 @@ function updateOrders() {
   });
 }
 updateOrders();
+
+function deleteOrder() {
+  const deleteInputs = document.querySelectorAll(".deleteItem");
+  deleteInputs.forEach((deleteInput) => {
+    deleteInput.addEventListener("click", (e) => {
+      const idDelete = e.target.closest(".cart__item").dataset.id;
+      const colorDelete = e.target.closest(".cart__item").dataset.color;
+      const itemDelete = cart.find(
+        (el) => (el.id === idDelete) & (el.color === colorDelete)
+      );
+      console.log(itemDelete);
+      keyDelete = idDelete + colorDelete;
+      localStorage.removeItem(keyDelete);
+      alert("Ce produit a bien été supprimé du panier");
+      location.reload();
+    });
+  });
+}
+deleteOrder();

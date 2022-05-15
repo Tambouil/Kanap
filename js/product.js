@@ -87,6 +87,7 @@ cartButton.addEventListener("click", handleClick);
 
 // Add selected data to local storage
 const addToCart = (colorValue, quantityValue) => {
+  const keyStorage = productId + colorValue;
   const storedData = {
     id: productId,
     name: storedName,
@@ -96,5 +97,5 @@ const addToCart = (colorValue, quantityValue) => {
     image: storedImg,
     alt: storedAltTxt,
   };
-  localStorage.setItem(productId, JSON.stringify(storedData));
+  localStorage.setItem(keyStorage, JSON.stringify(storedData));
 };
