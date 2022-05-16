@@ -18,98 +18,100 @@ const displayOrders = () => {
     emptyCart.textContent = "Votre panier est vide :(";
   } else {
     cart.forEach((item) => {
-      const { id, name, price, color, quantity, image, alt } = item;
+      const { id, name, color, quantity, image, alt } = item;
 
-      const article = document.createElement("article");
-      document.getElementById("cart__items").appendChild(article);
-      article.classList.add("cart__item");
-      article.dataset.id = id;
-      article.dataset.color = color;
+      fetch(`http://localhost:3000/api/products/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const article = document.createElement("article");
+          document.getElementById("cart__items").appendChild(article);
+          article.classList.add("cart__item");
+          article.dataset.id = id;
+          article.dataset.color = color;
 
-      // Attributes section
-      const imgContainer = document.createElement("div");
-      article.appendChild(imgContainer);
-      imgContainer.classList.add("cart__item__img");
+          // Attributes section
+          const imgContainer = document.createElement("div");
+          article.appendChild(imgContainer);
+          imgContainer.classList.add("cart__item__img");
 
-      const itemImg = document.createElement("img");
-      imgContainer.appendChild(itemImg);
-      itemImg.src = image;
-      itemImg.alt = alt;
+          const itemImg = document.createElement("img");
+          imgContainer.appendChild(itemImg);
+          itemImg.src = image;
+          itemImg.alt = alt;
 
-      const contentContainer = document.createElement("div");
-      article.appendChild(contentContainer);
-      contentContainer.classList.add("cart__item__content");
+          const contentContainer = document.createElement("div");
+          article.appendChild(contentContainer);
+          contentContainer.classList.add("cart__item__content");
 
-      const descriptionItem = document.createElement("div");
-      contentContainer.appendChild(descriptionItem);
-      descriptionItem.classList.add("cart__item__content__description");
+          const descriptionItem = document.createElement("div");
+          contentContainer.appendChild(descriptionItem);
+          descriptionItem.classList.add("cart__item__content__description");
 
-      const titleItem = document.createElement("h2");
-      titleItem.textContent = name;
+          const titleItem = document.createElement("h2");
+          titleItem.textContent = name;
 
-      const colorItem = document.createElement("p");
-      colorItem.textContent = color;
+          const colorItem = document.createElement("p");
+          colorItem.textContent = color;
 
-      const priceItem = document.createElement("p");
-      priceItem.textContent = price + " €";
+          const priceItem = document.createElement("p");
+          priceItem.textContent = data.price + " €";
 
-      descriptionItem.append(titleItem, colorItem, priceItem);
+          descriptionItem.append(titleItem, colorItem, priceItem);
 
-      // Settings section
-      const settings = document.createElement("div");
-      contentContainer.appendChild(settings);
-      settings.classList.add("cart__item__content__settings");
+          // Settings section
+          const settings = document.createElement("div");
+          contentContainer.appendChild(settings);
+          settings.classList.add("cart__item__content__settings");
 
-      const quantityContainer = document.createElement("div");
-      quantityContainer.classList.add(
-        "cart__item__content__settings__quantity"
-      );
+          const quantityContainer = document.createElement("div");
+          quantityContainer.classList.add(
+            "cart__item__content__settings__quantity"
+          );
 
-      const quantityTitle = document.createElement("p");
-      quantityTitle.textContent = "Qté : ";
+          const quantityTitle = document.createElement("p");
+          quantityTitle.textContent = "Qté : ";
 
-      const quantityInput = document.createElement("input");
-      quantityInput.type = "number";
-      quantityInput.classList.add("itemQuantity");
-      quantityInput.name = "itemQuantity";
-      quantityInput.min = "1";
-      quantityInput.max = "100";
-      quantityInput.value = quantity;
+          const quantityInput = document.createElement("input");
+          quantityInput.type = "number";
+          quantityInput.classList.add("itemQuantity");
+          quantityInput.name = "itemQuantity";
+          quantityInput.min = "1";
+          quantityInput.max = "100";
+          quantityInput.value = quantity;
 
-      const deleteContainer = document.createElement("div");
-      deleteContainer.classList.add("cart__item__content__settings__delete");
+          const deleteContainer = document.createElement("div");
+          deleteContainer.classList.add(
+            "cart__item__content__settings__delete"
+          );
 
-      settings.append(quantityContainer, deleteContainer);
-      quantityContainer.append(quantityTitle, quantityInput);
+          settings.append(quantityContainer, deleteContainer);
+          quantityContainer.append(quantityTitle, quantityInput);
 
-      const deleteItem = document.createElement("p");
-      deleteContainer.appendChild(deleteItem);
-      deleteItem.classList.add("deleteItem");
-      deleteItem.textContent = "Supprimer";
+          const deleteItem = document.createElement("p");
+          deleteContainer.appendChild(deleteItem);
+          deleteItem.classList.add("deleteItem");
+          deleteItem.textContent = "Supprimer";
+
+          getTotalQuantityPrice(data);
+          updateOrders(data);
+          deleteOrder();
+        });
     });
   }
-  deleteOrder();
 };
 displayOrders();
 
-const getTotalQuantity = () => {
-  const totalQuantity = document.getElementById("totalQuantity");
-  const total = cart.reduce((total, item) => total + item.quantity, 0);
-  totalQuantity.textContent = total;
-};
-getTotalQuantity();
+const getTotalQuantityPrice = (data) => {
+  const totalQuantityContainer = document.getElementById("totalQuantity");
+  const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
+  totalQuantityContainer.textContent = totalQuantity;
 
-const getTotalPrice = () => {
-  const totalPrice = document.getElementById("totalPrice");
-  const total = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
-  totalPrice.textContent = total;
+  const totalPriceContainer = document.getElementById("totalPrice");
+  const totalPrice = data.price * totalQuantity;
+  totalPriceContainer.textContent = totalPrice;
 };
-getTotalPrice();
 
-const updateOrders = () => {
+const updateOrders = (data) => {
   const updateInputs = document.querySelectorAll(".itemQuantity");
   updateInputs.forEach((updateInput) => {
     updateInput.addEventListener("change", (e) => {
@@ -125,14 +127,12 @@ const updateOrders = () => {
       const orderUpdated = JSON.stringify(itemUpdate);
       localStorage.setItem(keyUpdate, orderUpdated);
 
-      getTotalQuantity();
-      getTotalPrice();
+      getTotalQuantityPrice(data);
     });
   });
 };
-updateOrders();
 
-function deleteOrder() {
+const deleteOrder = () => {
   const deleteInputs = document.querySelectorAll(".deleteItem");
   deleteInputs.forEach((deleteInput) => {
     deleteInput.addEventListener("click", (e) => {
@@ -148,4 +148,4 @@ function deleteOrder() {
       itemToDelete.remove();
     });
   });
-}
+};

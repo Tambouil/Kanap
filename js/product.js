@@ -91,7 +91,6 @@ const addToCart = (colorValue, quantityValue) => {
   const storedData = {
     id: productId,
     name: storedName,
-    price: storedPrice,
     color: colorValue,
     quantity: Number(quantityValue),
     image: storedImg,
