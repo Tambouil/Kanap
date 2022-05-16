@@ -96,6 +96,12 @@ const displayOrders = () => {
           getTotalQuantityPrice(data);
           updateOrders(data);
           deleteOrder();
+        })
+        .catch((err) => {
+          const serverError = document.createElement("p");
+          serverError.textContent = err.message;
+          document.getElementById("cart__items").appendChild(serverError);
+          serverError.style.textAlign = "center";
         });
     });
   }
