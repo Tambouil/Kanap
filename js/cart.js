@@ -20,6 +20,7 @@ const displayOrders = () => {
     cart.forEach((item) => {
       const { id, name, color, quantity, image, alt } = item;
 
+      // Get product's price from API
       fetch(`http://localhost:3000/api/products/${id}`)
         .then((response) => response.json())
         .then((data) => {
@@ -101,6 +102,7 @@ const displayOrders = () => {
 };
 displayOrders();
 
+// Display total quantity and total price order
 const getTotalQuantityPrice = (data) => {
   const totalQuantityContainer = document.getElementById("totalQuantity");
   const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
@@ -111,6 +113,7 @@ const getTotalQuantityPrice = (data) => {
   totalPriceContainer.textContent = totalPrice;
 };
 
+// Update total quanity and total price order
 const updateOrders = (data) => {
   const updateInputs = document.querySelectorAll(".itemQuantity");
   updateInputs.forEach((updateInput) => {
@@ -132,6 +135,7 @@ const updateOrders = (data) => {
   });
 };
 
+// delete item from order
 const deleteOrder = () => {
   const deleteInputs = document.querySelectorAll(".deleteItem");
   deleteInputs.forEach((deleteInput) => {
