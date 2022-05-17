@@ -1,19 +1,7 @@
-const cart = [];
+const cart = JSON.parse(localStorage.getItem("Storage"));
 
-// Convert localstorage to an array of objects
-const localStorageToCart = () => {
-  for (let i = 0; i < localStorage.length; i++) {
-    const storedOrder = localStorage.getItem(localStorage.key(i));
-    const orders = JSON.parse(storedOrder);
-    cart.push(orders);
-  }
-  console.log(cart);
-};
-localStorageToCart();
-
-// Display all orders in the cart
 const displayOrders = () => {
-  if (cart.length === 0) {
+  if (cart === null || cart.length === 0) {
     const emptyCart = document.getElementById("cart__title");
     emptyCart.textContent = "Votre panier est vide :(";
   } else {
@@ -95,7 +83,7 @@ const displayOrders = () => {
 
           getTotalQuantityPrice(data);
           updateOrders(data);
-          deleteOrder();
+          deleteOrder(data);
         })
         .catch((err) => {
           const serverError = document.createElement("p");
@@ -129,33 +117,28 @@ const updateOrders = (data) => {
       const itemUpdate = cart.find(
         (el) => (el.id === idUpdate) & (el.color === colorUpdate)
       );
-
-      keyUpdate = idUpdate + colorUpdate;
       itemUpdate.quantity = Number(updateInput.value);
-
-      const orderUpdated = JSON.stringify(itemUpdate);
-      localStorage.setItem(keyUpdate, orderUpdated);
+      const orderUpdated = JSON.stringify(cart);
+      localStorage.setItem("Storage", orderUpdated);
 
       getTotalQuantityPrice(data);
     });
   });
 };
 
-// delete item from order
-const deleteOrder = () => {
+// Delete item from order
+const deleteOrder = (data) => {
   const deleteInputs = document.querySelectorAll(".deleteItem");
-  deleteInputs.forEach((deleteInput) => {
-    deleteInput.addEventListener("click", (e) => {
-      const idDelete = e.target.closest(".cart__item").dataset.id;
-      const colorDelete = e.target.closest(".cart__item").dataset.color;
-      keyDelete = idDelete + colorDelete;
-      localStorage.removeItem(keyDelete);
-      alert("Ce produit a bien été supprimé du panier");
+  deleteInputs.forEach((deleteInput, i) => {
+    deleteInput.addEventListener("click", () => {
+      const articleToDelete = deleteInput.closest("article");
+      articleToDelete.remove();
 
-      const itemToDelete = document.querySelector(
-        `article[data-id="${idDelete}"][data-color="${colorDelete}"]`
-      );
-      itemToDelete.remove();
+      const productToDelete = cart.indexOf(cart[i]);
+      cart.splice(productToDelete);
+      localStorage.setItem("Storage", JSON.stringify(cart));
+
+      getTotalQuantityPrice(data);
     });
   });
 };

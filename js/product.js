@@ -65,6 +65,8 @@ const displayProducts = (product) => {
     colorOptions.textContent = color;
     colorsList.appendChild(colorOptions);
   });
+  const cartButton = document.getElementById("addToCart");
+  cartButton.addEventListener("click", handleClick);
 };
 
 // Get values from user choice on click
@@ -76,18 +78,15 @@ const handleClick = () => {
     alert("veuillez sélectionner une couleur et une quantité");
   } else {
     addToCart(colorValue, quantityValue);
-    window.confirm(
-      `Votre commande a bien été ajoutée au panier. Pour consulter votre panier, cliquez sur OK`
+    window.alert(
+      `Votre commande a bien été ajoutée au panier. Pour le consulter, cliquez sur OK`
     );
     window.location.href = "./cart.html";
   }
 };
-const cartButton = document.getElementById("addToCart");
-cartButton.addEventListener("click", handleClick);
 
-// Add selected data to local storage
+// Store selected datas to localStorage
 const addToCart = (colorValue, quantityValue) => {
-  const keyStorage = productId + colorValue;
   const storedData = {
     id: productId,
     name: storedName,
@@ -96,5 +95,29 @@ const addToCart = (colorValue, quantityValue) => {
     image: storedImg,
     alt: storedAltTxt,
   };
-  localStorage.setItem(keyStorage, JSON.stringify(storedData));
+  let cart = JSON.parse(localStorage.getItem("Storage"));
+
+  // If Cart exist
+  if (cart) {
+    const itemToUpdate = cart.find(
+      (item) => item.id === productId && item.color === colorValue
+    );
+    //Update quantity if the product is already in the cart
+    if (itemToUpdate) {
+      const quantityToUpdate =
+        parseInt(storedData.quantity) + parseInt(itemToUpdate.quantity);
+      itemToUpdate.quantity = quantityToUpdate;
+      localStorage.setItem("Storage", JSON.stringify(cart));
+
+      // Store product in localStorage
+    } else {
+      cart.push(storedData);
+      localStorage.setItem("Storage", JSON.stringify(cart));
+    }
+    //If cart doesn't exist
+  } else {
+    cart = [];
+    cart.push(storedData);
+    localStorage.setItem("Storage", JSON.stringify(cart));
+  }
 };
