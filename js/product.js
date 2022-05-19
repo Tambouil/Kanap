@@ -75,7 +75,9 @@ const handleClick = () => {
   const quantityValue = document.getElementById("quantity").value;
 
   if (colorValue === "" || quantityValue == 0) {
-    alert("veuillez sélectionner une couleur et une quantité");
+    return alert("veuillez sélectionner une couleur et une quantité");
+  } else if (quantityValue <= 0 || quantityValue > 100) {
+    return alert("Veuillez choisir une quantité comprise entre 1 et 100");
   } else {
     addToCart(colorValue, quantityValue);
     window.alert(
