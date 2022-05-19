@@ -134,3 +134,81 @@ const updateOrders = (data) => {
     });
   });
 };
+
+// Check valid inputs for order form
+const checkForm = () => {
+  const form = document.querySelector(".cart__order__form");
+  const checkNames = new RegExp("^[a-zA-Z-àâäéèêëïîôöùûüç ,.'-]+$");
+  const checkAdress = new RegExp(
+    "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
+  );
+  const checkEmail = new RegExp(
+    "^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,10}$"
+  );
+
+  form.firstName.addEventListener("input", function () {
+    checkFirstName(this);
+  });
+
+  const checkFirstName = function (firstNameInput) {
+    const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+    if (checkNames.test(firstNameInput.value)) {
+      firstNameErrorMsg.textContent = "";
+    } else {
+      firstNameErrorMsg.textContent = "Merci de renseigner un prénom valide";
+    }
+  };
+
+  form.lastName.addEventListener("input", function () {
+    validLastName(this);
+  });
+
+  const validLastName = function (lastNameInput) {
+    const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+    if (checkNames.test(lastNameInput.value)) {
+      lastNameErrorMsg.textContent = "";
+    } else {
+      lastNameErrorMsg.textContent = "Merci de renseigner un nom valide";
+    }
+  };
+
+  form.address.addEventListener("input", function () {
+    validAddress(this);
+  });
+
+  const validAddress = function (addressInput) {
+    const addressErrorMsg = document.getElementById("addressErrorMsg");
+    if (checkAdress.test(addressInput.value)) {
+      addressErrorMsg.textContent = "";
+    } else {
+      addressErrorMsg.textContent = "Merci de renseigner une adresse valide";
+    }
+  };
+
+  form.city.addEventListener("input", function () {
+    validCity(this);
+  });
+
+  const validCity = function (cityInput) {
+    const cityErrorMsg = document.getElementById("cityErrorMsg");
+    if (checkNames.test(cityInput.value)) {
+      cityErrorMsg.textContent = "";
+    } else {
+      cityErrorMsg.textContent = "Merci de renseigner une ville valide";
+    }
+  };
+
+  form.email.addEventListener("input", function () {
+    validEmail(this);
+  });
+
+  const validEmail = function (emailInput) {
+    const emailErrorMsg = document.getElementById("emailErrorMsg");
+    if (checkEmail.test(emailInput.value)) {
+      emailErrorMsg.textContent = "";
+    } else {
+      emailErrorMsg.textContent = "Merci de renseigner une adresse mail valide";
+    }
+  };
+};
+checkForm();
