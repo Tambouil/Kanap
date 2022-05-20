@@ -1,4 +1,11 @@
 let cart = JSON.parse(localStorage.getItem("Storage"));
+const checkNames = new RegExp("^[a-zA-Z-àâäéèêëïîôöùûüç ,.'-]+$");
+const checkAdress = new RegExp(
+  "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
+);
+const checkEmail = new RegExp(
+  "^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,10}$"
+);
 
 // Get Datas from API
 const getDatas = async () => {
@@ -138,13 +145,6 @@ const updateOrders = (data) => {
 // Check valid inputs for order form
 const checkForm = () => {
   const form = document.querySelector(".cart__order__form");
-  const checkNames = new RegExp("^[a-zA-Z-àâäéèêëïîôöùûüç ,.'-]+$");
-  const checkAdress = new RegExp(
-    "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
-  );
-  const checkEmail = new RegExp(
-    "^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,10}$"
-  );
 
   form.firstName.addEventListener("input", function () {
     checkFirstName(this);
@@ -212,3 +212,70 @@ const checkForm = () => {
   };
 };
 checkForm();
+
+const sendForm = () => {
+  const orderBtn = document.getElementById("order");
+  const firstNameField = document.getElementById("firstName");
+  const lastNameField = document.getElementById("lastName");
+  const addressField = document.getElementById("address");
+  const cityField = document.getElementById("city");
+  const emailField = document.getElementById("email");
+
+  orderBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    if (
+      !firstNameField.value ||
+      !lastNameField.value ||
+      !cityField.value ||
+      !addressField.value ||
+      !emailField.value
+    ) {
+      alert("Vous devez renseigner tous les champs !");
+    } else if (
+      !checkNames.test(firstName.value) ||
+      !checkNames.test(lastName.value) ||
+      !checkNames.test(city.value) ||
+      !checkAdress.test(address.value) ||
+      !checkEmail.test(email.value)
+    ) {
+      alert("Merci de renseigner correctement tous les champs");
+    } else {
+      const orderIds = [];
+
+      cart.forEach((item) => {
+        orderIds.push(item.id);
+      });
+
+      const order = {
+        contact: {
+          firstName: firstNameField.value,
+          lastName: lastNameField.value,
+          address: addressField.value,
+          city: cityField.value,
+          email: emailField.value,
+        },
+        products: orderIds,
+      };
+
+      const options = {
+        method: "POST",
+        body: JSON.stringify(order),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      fetch("http://localhost:3000/api/products/order", options)
+        .then((res) => res.json())
+        .then((data) => {
+          localStorage.clear();
+          document.location.href =
+            "./confirmation.html?orderId=" + data.orderId;
+        })
+        .catch((err) => {
+          alert("Server error" + err.message);
+        });
+    }
+  });
+};
+sendForm();
