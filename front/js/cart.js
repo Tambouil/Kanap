@@ -150,7 +150,7 @@ const checkForm = () => {
     checkFirstName(this);
   });
 
-  const checkFirstName = function (firstNameInput) {
+  const checkFirstName = (firstNameInput) => {
     const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
     if (checkNames.test(firstNameInput.value)) {
       firstNameErrorMsg.textContent = "";
@@ -163,7 +163,7 @@ const checkForm = () => {
     validLastName(this);
   });
 
-  const validLastName = function (lastNameInput) {
+  const validLastName = (lastNameInput) => {
     const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
     if (checkNames.test(lastNameInput.value)) {
       lastNameErrorMsg.textContent = "";
@@ -176,7 +176,7 @@ const checkForm = () => {
     validAddress(this);
   });
 
-  const validAddress = function (addressInput) {
+  const validAddress = (addressInput) => {
     const addressErrorMsg = document.getElementById("addressErrorMsg");
     if (checkAdress.test(addressInput.value)) {
       addressErrorMsg.textContent = "";
@@ -189,7 +189,7 @@ const checkForm = () => {
     validCity(this);
   });
 
-  const validCity = function (cityInput) {
+  const validCity = (cityInput) => {
     const cityErrorMsg = document.getElementById("cityErrorMsg");
     if (checkNames.test(cityInput.value)) {
       cityErrorMsg.textContent = "";
@@ -202,7 +202,7 @@ const checkForm = () => {
     validEmail(this);
   });
 
-  const validEmail = function (emailInput) {
+  const validEmail = (emailInput) => {
     const emailErrorMsg = document.getElementById("emailErrorMsg");
     if (checkEmail.test(emailInput.value)) {
       emailErrorMsg.textContent = "";
@@ -221,7 +221,7 @@ const sendForm = () => {
   const cityField = document.getElementById("city");
   const emailField = document.getElementById("email");
 
-  orderBtn.addEventListener("click", function (e) {
+  orderBtn.addEventListener("click", (e) => {
     e.preventDefault();
     if (
       !firstNameField.value ||
@@ -230,7 +230,7 @@ const sendForm = () => {
       !addressField.value ||
       !emailField.value
     ) {
-      alert("Vous devez renseigner tous les champs !");
+      return alert("Un ou plusieurs champs sont vides");
     } else if (
       !checkNames.test(firstName.value) ||
       !checkNames.test(lastName.value) ||
@@ -238,7 +238,7 @@ const sendForm = () => {
       !checkAdress.test(address.value) ||
       !checkEmail.test(email.value)
     ) {
-      alert("Merci de renseigner correctement tous les champs");
+      return alert("Les champs ne sont pas correctement renseignés");
     } else {
       const orderIds = [];
 
